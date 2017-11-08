@@ -10,24 +10,79 @@ import {
   Menu,
   Segment,
   Visibility
-} from 'semantic-ui-react'
+} from 'semantic-ui-react';
 
-const FixedMenu = () => (
-  <Menu fixed='top' size='large'>
-    <Container>
-      <Menu.Item as='a' active>Home</Menu.Item>
-      <Menu.Item as='a'>Testimonials</Menu.Item>
-      <Menu.Item as='a'>Company</Menu.Item>
-      <Menu.Item as='a'>Contact</Menu.Item>
-    </Container>
-  </Menu>
-)
+import ScrollableAnchor, { configureAnchors, goToTop, goToAnchor } from 'react-scrollable-anchor';
+
+// Offset all anchors by -60 to account for a fixed header
+// and scroll more quickly than the default 400ms
+configureAnchors({offset: -60, scrollDuration: 200});
+
+
+class FixedMenu extends Component {
+
+  constructor(props) {
+    super(props);
+    this.goToHome = this.goToHome.bind(this);
+    this.goToCompany = this.goToCompany.bind(this);
+    this.goToTestimonials = this.goToTestimonials.bind(this);
+    this.goToContact = this.goToContact.bind(this);
+  }
+  
+  goToHome() {
+    goToTop();
+  }
+  goToCompany() {
+    goToAnchor('company');
+  }
+
+  goToTestimonials() {
+    goToAnchor('testimonials');
+  }
+  goToContact() {
+    goToAnchor('contact');
+  }
+
+  render () {
+    return (
+      <Menu fixed='top' size='large'>
+        <Container>
+          <Menu.Item onClick={this.goToHome} active>Home</Menu.Item>
+          <Menu.Item onClick={this.goToCompany} >Company</Menu.Item>
+          <Menu.Item onClick={this.goToTestimonials} >Testimonials</Menu.Item>
+          <Menu.Item onClick={this.goToContact}>Contact</Menu.Item>
+        </Container>
+      </Menu>);
+  }
+
+}
 
 export default class HomepageLayout extends Component {
   state = {}
 
-  hideFixedMenu = () => this.setState({ visible: false })
-  showFixedMenu = () => this.setState({ visible: true })
+  hideFixedMenu = () => this.setState({ visible: false });
+  showFixedMenu = () => this.setState({ visible: true });
+
+  constructor(props) {
+    super(props);
+    this.goToHome = this.goToHome.bind(this);
+    this.goToCompany = this.goToCompany.bind(this);
+    this.goToTestimonials = this.goToTestimonials.bind(this);
+    this.goToContact = this.goToContact.bind(this);
+  }
+  
+  goToHome() {
+    goToTop();
+  }
+  goToCompany() {
+    goToAnchor('company');
+  }
+  goToTestimonials() {
+    goToAnchor('testimonials');
+  }
+  goToContact() {
+    goToAnchor('contact');
+  }
 
   render() {
     const { visible } = this.state
@@ -49,27 +104,30 @@ export default class HomepageLayout extends Component {
           >
             <Container>
               <Menu inverted pointing secondary size='large'>
-              <Menu.Item as='a' active>Home</Menu.Item>
-              <Menu.Item as='a'>Testimonials</Menu.Item>
-              <Menu.Item as='a'>Company</Menu.Item>
-              <Menu.Item as='a'>Contact</Menu.Item>
+              <Menu.Item onClick={this.goToHome} active>Home</Menu.Item>
+              <Menu.Item onClick={this.goToCompany}>Company</Menu.Item>
+              <Menu.Item onClick={this.goToTestimonials}>Testimonials</Menu.Item>
+              <Menu.Item onClick={this.goToContact}>Contact</Menu.Item>
               </Menu>
             </Container>
 
             <Container text>
-              <Header
-                as='h1'
-                content='KNUF Plumbing and Heating'
-                inverted
-                style={{ fontSize: '4em', fontWeight: 'normal', marginBottom: 0, marginTop: '3em' }}
-              />
-              <Header
-                as='h2'
-                content='Serving Southern Manitoba.'
-                inverted
-                style={{ fontSize: '1.7em', fontWeight: 'normal' }}
-              />
+              <ScrollableAnchor id={'home'}><div/></ScrollableAnchor>
+                <Header
+                  as='h1'
+                  content='KNUF Plumbing and Heating'
+                  inverted
+                  style={{ fontSize: '4em', fontWeight: 'normal', marginBottom: 0, marginTop: '3em' }}
+                />
+                <Header
+                  as='h2'
+                  content='Serving Southern Manitoba.'
+                  inverted
+                  style={{ fontSize: '1.7em', fontWeight: 'normal' }}
+                />
+              
             </Container>
+            
           </Segment>
         </Visibility>
 
@@ -77,6 +135,7 @@ export default class HomepageLayout extends Component {
           <Grid container stackable verticalAlign='middle'>
             <Grid.Row>
               <Grid.Column width={8}>
+                <ScrollableAnchor id={'company'}><div/></ScrollableAnchor>
                 <Header as='h3' style={{ fontSize: '2em' }}>Locally owned. Locally operated. We can help.</Header>
                 <p style={{ fontSize: '1.33em' }}>
                   We provide plumbing and heating services for any size project. Whether you are a
@@ -106,6 +165,7 @@ export default class HomepageLayout extends Component {
         <Segment style={{ padding: '0em' }} vertical>
           <Grid celled='internally' columns='equal' stackable>
             <Grid.Row textAlign='center'>
+              <ScrollableAnchor id={'testimonials'}><div/></ScrollableAnchor>
               <Grid.Column style={{ paddingBottom: '5em', paddingTop: '5em' }}>
                 <Header as='h3' style={{ fontSize: '2em' }}>"I had major water leaking problems, and KNUF came immediately and solved my problem"</Header>
                 <p style={{ fontSize: '1.33em' }}>- Kleefeld resident</p>
@@ -136,8 +196,9 @@ export default class HomepageLayout extends Component {
             >
               <a href='#'>Contact</a>
             </Divider>
-
-            <Header as='h3' style={{ fontSize: '2em' }}>How to get a hold of us</Header>
+            <ScrollableAnchor id={'contact'}><div/></ScrollableAnchor>
+              <Header as='h3' style={{ fontSize: '2em' }}>How to get a hold of us</Header>
+           
             <p style={{ fontSize: '1.33em' }}>
               Get a hold of us at 204-371-6645.
             </p>
@@ -165,8 +226,8 @@ export default class HomepageLayout extends Component {
                   </List>
                 </Grid.Column>
                 <Grid.Column width={7}>
-                  <Header as='h4' inverted>Footer Header</Header>
-                  <p>Extra space for a call to action inside the footer that could help re-engage users.</p>
+                  <Header as='h4' inverted>KNUF Plubing and Heating</Header>
+                  <p>For all your plubing and heating needs. Call us today to get your project scheduled.</p>
                 </Grid.Column>
               </Grid.Row>
             </Grid>
